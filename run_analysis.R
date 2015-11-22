@@ -25,6 +25,7 @@ FVEC_LEN <- 561
 ## We're going to merge the provided training and test sets to one tidy dataset.
 ## We'll be using:
 ##
+##   data_dir/activity_labels.txt      - (6 x 2) "WALKING", "WALKING_UPSTAIRS"...
 ##   data_dir/features.txt             - (561 x 2) starting place for
 ##                                       generating column names
 ##
@@ -66,12 +67,12 @@ stopifnot(dim(X_test)[2] == FVEC_LEN)
 ## features that have -X, -Y, -Z suffixes, I'm assuming that they
 ## are missing the appropriate suffix, and thus am making my
 ## best guess to disambiguate them.  The feature groups in question
-## start at 303, 482, and 461 and all contain -bandsEnergy()- in their name
+## start at 303, 382, and 461 and all contain -bandsEnergy()- in their name
 
-function add_XYZ(s) {
-    for (i in seq(s,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
-    for (i in seq(s+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
-    for (i in seq(s+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
+add_XYZ <- function(s) {
+    for (i in seq(s,      length=14)) fname$name[i] <<- paste0(fname$name[i], '-X')
+    for (i in seq(s+1*14, length=14)) fname$name[i] <<- paste0(fname$name[i], '-Y')
+    for (i in seq(s+2*14, length=14)) fname$name[i] <<- paste0(fname$name[i], '-Z')
 }
 
 add_XYZ(303)      # fBodyAcc-bandsEnergy-*
