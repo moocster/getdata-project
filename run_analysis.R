@@ -109,5 +109,19 @@ fname <- mutate(fname, name=demangle(name))
 ## Confirm they're all acceptable and unique
 stopifnot(all(fname$name == make.names(fname$name, unique=TRUE)))
 
+## ------------------------------------------------------------------------
+## rbind the training and test sets together
+
+X_all <- rbind(X_train, X_test)
+y_all <- rbind(y_train, y_test)
+subject_all <- rbind(subject_train, subject_test)
+
+## set the column names for the features
+names(X_all) <- fname$name
+
+## cbind the subject and activity too
+
+
+
 
 ## grep -E '_(mean|std)(_[XYZ])?$'
