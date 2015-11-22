@@ -44,21 +44,31 @@ act_labels <- read.table(file.path(data_dir, 'activity_labels.txt'),
                          col.names=c("V1", "activity"),
                          header=FALSE, stringsAsFactors=TRUE)
 
+
 fname <- read.table(file.path(data_dir, 'features.txt'),
                     col.names=c("idx", "name"),
                     header=FALSE, stringsAsFactors=FALSE)
 stopifnot(dim(fname)[1] == FVEC_LEN)
 
-X_train <- read.table(file.path(data_dir, 'train', 'X_train.txt'))
-y_train <- read.table(file.path(data_dir, 'train', 'y_train.txt'))
-subject_train <- read.table(file.path(data_dir, 'train', 'subject_train.txt'))
+
+X_train <- read.table(file.path(data_dir, 'train', 'X_train.txt'),
+                      header=FALSE, colClasses="numeric")
+y_train <- read.table(file.path(data_dir, 'train', 'y_train.txt'),
+                      header=FALSE, colClasses="integer")
+subject_train <- read.table(file.path(data_dir, 'train', 'subject_train.txt'),
+                            header=FALSE, colClasses="integer")
+
 stopifnot(dim(X_train)[1] == dim(y_train)[1] | dim(X_train)[1] != dim(subject_train))
 stopifnot(dim(X_train)[2] == FVEC_LEN)
 
 
-X_test <- read.table(file.path(data_dir, 'test', 'X_test.txt'))
-y_test <- read.table(file.path(data_dir, 'test', 'y_test.txt'))
-subject_test <- read.table(file.path(data_dir, 'test', 'subject_test.txt'))
+X_test <- read.table(file.path(data_dir, 'test', 'X_test.txt'),
+                     header=FALSE, colClasses="numeric")
+y_test <- read.table(file.path(data_dir, 'test', 'y_test.txt'),
+                     header=FALSE, colClasses="integer")
+subject_test <- read.table(file.path(data_dir, 'test', 'subject_test.txt'),
+                           header=FALSE, colClasses="integer")
+
 stopifnot(dim(X_test)[1] == dim(y_test)[1] | dim(X_test)[1] != dim(subject_test))
 stopifnot(dim(X_test)[2] == FVEC_LEN)
 
