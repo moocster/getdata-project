@@ -64,32 +64,30 @@ stopifnot(dim(X_test)[2] == FVEC_LEN)
 ##
 ## Since they appear contiguous in the file, and are amongst other
 ## features that have -X, -Y, -Z suffixes, I'm assuming that they
-## are missing the appropriate suffix, and thus are making my
-## best guess to disambiguate them.  The features in question
-## are in [303, 344] and all contain -bandsEnergy()- in their name
+## are missing the appropriate suffix, and thus am making my
+## best guess to disambiguate them.  The feature groups in question
+## start at 303, 482, and 461 and all contain -bandsEnergy()- in their name
 
-## fBodyAcc-bandsEnergy-*
-for (i in seq(303,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
-for (i in seq(303+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
-for (i in seq(303+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
+function add_XYZ(s) {
+    for (i in seq(s,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
+    for (i in seq(s+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
+    for (i in seq(s+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
+}
 
-## fBodyAccJerk-bandsEnergy-*
-for (i in seq(382,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
-for (i in seq(382+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
-for (i in seq(382+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
+add_XYZ(303)      # fBodyAcc-bandsEnergy-*
+add_XYZ(382)      # fBodyAccJerk-bandsEnergy-*
+add_XYZ(461)      # fBodyGyro-bandsEnergy-*
 
-## fBodyGyro-bandsEnergy-*
-for (i in seq(461,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
-for (i in seq(461+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
-for (i in seq(461+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
 
 ## Step 2: Correct typos in feature names.
 ##
 ## 555: angle(tBodyAccMean,gravity) should be angle(tbodyAccMean,gravityMean)
-## to be consistent with the others, and data_set/features_info.txt
+## to be consistent with the others; also data_set/features_info.txt
 ## mentions only "gravityMean", not "gravity"
-fname$name[555] <- gsub("gravity", "gravityMean", fname$name[555])
-fname$name[556] <- gsub("\\),", ",", fname$name[556])
+## 556: has an extra ")" in the middle of it.
+
+fname$name[555] <- "angle(tBodyAccMean,gravityMean)"
+fname$name[556] <- "angle(tBodyAccJerkMean,gravityMean)"
 
 
 ## Step 3: Do the general name mangling...
