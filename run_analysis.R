@@ -106,5 +106,8 @@ demangle <- function(x) {
 
 fname <- mutate(fname, name=demangle(name))
 
+## Confirm they're all acceptable and unique
+stopifnot(all(fname$name == make.names(fname$name, unique=TRUE)))
+
 
 ## grep -E '_(mean|std)(_[XYZ])?$'
