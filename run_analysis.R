@@ -68,9 +68,20 @@ stopifnot(dim(X_test)[2] == FVEC_LEN)
 ## best guess to disambiguate them.  The features in question
 ## are in [303, 344] and all contain -bandsEnergy()- in their name
 
+## fBodyAcc-bandsEnergy-*
 for (i in seq(303,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
 for (i in seq(303+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
 for (i in seq(303+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
+
+## fBodyAccJerk-bandsEnergy-*
+for (i in seq(382,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
+for (i in seq(382+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
+for (i in seq(382+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
+
+## fBodyGyro-bandsEnergy-*
+for (i in seq(461,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
+for (i in seq(461+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
+for (i in seq(461+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
 
 ## Step 2: Correct typos in feature names.
 ##
