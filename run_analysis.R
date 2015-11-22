@@ -33,15 +33,15 @@ FVEC_LEN <- 561
 ##   data_dir/train/y_train.txt        - (m_train x 1)   activity labels (integer)
 ##   data_dir/train/subject_train.txt  - (m_train x 1)   subject ID (integer)
 ##
-##   data_dir/test/X_test.txt          - (m_test x 561) feature vectors
-##   data_dir/test/y_test.txt          - (m_test x 1)   activity labels (integer)
-##   data_dir/test/subject_test.txt    - (m_test x 1)   subject ID (integer)
+##   data_dir/test/X_test.txt          - (m_test x 561)  feature vectors
+##   data_dir/test/y_test.txt          - (m_test x 1)    activity labels (integer)
+##   data_dir/test/subject_test.txt    - (m_test x 1)    subject ID (integer)
 
 ## Read everything in and make sure that they are the shape we expect.
 
 # We want the activity labels as factors
 act_labels <- read.table(file.path(data_dir, 'activity_labels.txt'),
-                         col.names=c("V1", "activity"),
+                         col.names=c("V1", "Activity"),
                          header=FALSE, stringsAsFactors=TRUE)
 
 
@@ -130,12 +130,23 @@ X_all <- rbind(X_train, X_test)
 y_all <- rbind(y_train, y_test)
 subject_all <- rbind(subject_train, subject_test)
 
-## set the column names for the features
-names(X_all) <- fname$name
+names(X_all) <- fname$name     # feature names
+names(subject_all) <- "Subject"
 
-## cbind the subject and activity too
+## Now prepend y_all and subject_all to X_all
+df <- cbind(y_all, subject_all, X_all)
 
+## merge the activity labels into df (this reorders the df)
+## this adds "Activity" at the end
+df2 <- merge(df, act_labels, by="V1")
 
+## Move Activity to the front, dropping V1
+len <- length(names(df2))
+df3 <- df2[c(len, 2:(len-1))]
 
+## all_data is a (wide) tidy data set.
+## Each row is an observation: all of the data for a single 50ms window
+## Each column is a variable:  Activity, Subject, 561 features
+all_data = df3
 
 ## grep -E '_(mean|std)(_[XYZ])?$'
