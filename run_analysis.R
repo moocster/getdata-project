@@ -39,6 +39,11 @@ FVEC_LEN <- 561
 
 ## Read everything in and make sure that they are the shape we expect.
 
+# We want the activity labels as factors
+act_labels <- read.table(file.path(data_dir, 'activity_labels.txt'),
+                         col.names=c("V1", "activity"),
+                         header=FALSE, stringsAsFactors=TRUE)
+
 fname <- read.table(file.path(data_dir, 'features.txt'),
                     col.names=c("idx", "name"),
                     header=FALSE, stringsAsFactors=FALSE)
