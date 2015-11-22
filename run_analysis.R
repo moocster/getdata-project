@@ -21,18 +21,22 @@ stopifnot(dir.exists(data_dir) & file.exists(file.path(data_dir, 'features.txt')
 
 FVEC_LEN <- 561
 
+## -------------------------------------------------------------------------------
 ## We're going to merge the provided training and test sets to one tidy dataset.
 ## We'll be using:
 ##
-##   data_dir/features.txt             - (561 x 2) starting place for generating column names
+##   data_dir/features.txt             - (561 x 2) starting place for
+##                                       generating column names
 ##
 ##   data_dir/train/X_train.txt        - (m_train x 561) feature vectors
 ##   data_dir/train/y_train.txt        - (m_train x 1)   activity labels (integer)
-##   data_dir/train/subject_train.txt  - (m_train x 1)   subject ID
+##   data_dir/train/subject_train.txt  - (m_train x 1)   subject ID (integer)
 ##
 ##   data_dir/test/X_test.txt          - (m_test x 561) feature vectors
 ##   data_dir/test/y_test.txt          - (m_test x 1)   activity labels (integer)
-##   data_dir/test/subject_test.txt    - (m_test x 1)   subject ID
+##   data_dir/test/subject_test.txt    - (m_test x 1)   subject ID (integer)
+
+## Read everything in and make sure that they are the shape we expect.
 
 fname <- read.table(file.path(data_dir, 'features.txt'),
                     col.names=c("idx", "name"),
@@ -52,6 +56,7 @@ subject_test <- read.table(file.path(data_dir, 'test', 'subject_test.txt'))
 stopifnot(dim(X_test)[1] == dim(y_test)[1] | dim(X_test)[1] != dim(subject_test))
 stopifnot(dim(X_test)[2] == FVEC_LEN)
 
+## ------------------------------------------------------------------------
 ## Now we start working on cleaning up the feature names so that they
 ## make sense and are legal column names in R
 
@@ -67,9 +72,28 @@ for (i in seq(303,      length=14)) fname$name[i] <- paste0(fname$name[i], '-X')
 for (i in seq(303+1*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Y')
 for (i in seq(303+2*14, length=14)) fname$name[i] <- paste0(fname$name[i], '-Z')
 
-## Step 2: Correct typo in feature name.
+## Step 2: Correct typos in feature names.
 ##
-## 505: angle(tBodyAccMean,gravity) should be angle(tbodyAccMean,gravityMean)
+## 555: angle(tBodyAccMean,gravity) should be angle(tbodyAccMean,gravityMean)
 ## to be consistent with the others, and data_set/features_info.txt
 ## mentions only "gravityMean", not "gravity"
 fname$name[555] <- gsub("gravity", "gravityMean", fname$name[555])
+fname$name[556] <- gsub("\\),", ",", fname$name[556])
+
+
+## Step 3: Do the general name mangling...
+
+demangle <- function(x) {
+    x <- gsub("arCoeff\\(\\)(\\d)","arCoeff-\\1", x)
+    x <- gsub("\\(\\)", "", x)
+    x <- gsub("-", "_", x)
+    x <- gsub("(\\d+),(\\d+)", "\\1_\\2", x)  # bandsEnergy_25_32_X
+    x <- gsub(",", ".", x)
+    x <- gsub("^angle\\((.*)\\)", "angle_\\1", x)
+    x
+}
+
+fname <- mutate(fname, name=demangle(name))
+
+
+## grep -E '_(mean|std)(_[XYZ])?$'
