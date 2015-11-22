@@ -2,14 +2,6 @@
 
 library(dplyr)
 
-# Using the dplyr library is easier
-#
-# You should give a look to: http://rpubs.com/justmarkham/dplyr-tutorial
-#
-# allData%>%
-#  group_by(Subject, Label)%>%
-#  summarise_each (funs(mean), contains("mean()"), contains("std()"))
-
 
 ## Start by ensuring that UCI dataset was unpacked in this directory
 
@@ -144,9 +136,39 @@ df2 <- merge(df, act_labels, by="V1")
 len <- length(names(df2))
 df3 <- df2[c(len, 2:(len-1))]
 
-## all_data is a (wide) tidy data set.
+
+all_data <- df3                  # all_data is a (wide) tidy data set.
+
 ## Each row is an observation: all of the data for a single 50ms window
 ## Each column is a variable:  Activity, Subject, 561 features
-all_data = df3
 
-## grep -E '_(mean|std)(_[XYZ])?$'
+
+## ------------------------------------------------------------------------
+## Create the data set required in step 5 of the instructions:
+##
+## "From the data set in step 4, create a second, independent tidy data
+## set with the average of each variable for each activity and each
+## subject."
+##
+## In our implementation, we do the subsetting and averaging from all_data
+## using the group_by and summarise_each methods.
+
+avg_mean_std <- all_data %>%
+    group_by(Subject, Activity) %>%
+    summarise_each (funs(mean), matches("_(mean|std)(_[XYZ])?$"))
+
+
+## There are 66 column names that end with mean or std
+## optionally followed by _X, _Y or _Z
+## dim(select(all_data, matches("_(mean|std)(_[XYZ])?$")))
+
+## avg_mean_std is a (wide) tidy data set.
+##
+## In an ideal universe this would be a a 3 dimensional data structure:
+##  Subjects(30) x Activities(6) x Averages(66)
+##
+## Here in data.frame flatland, we represent this as
+##   180 observations(30x6) of the Averages(66).
+
+
+write.table(avg_mean_std, "avg_mean_std.txt", row.names=FALSE)
