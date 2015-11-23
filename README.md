@@ -36,7 +36,7 @@ and unzipped it in the directory that contains run_analysis.R
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 
 1. Unzip it in the directory that contains run_analysis.R
-This will create a directory called 'UCI HAR Dataset'
+This will create a directory called `UCI HAR Dataset`
 
 1. Source `run_analysis.R` to generate `avg_mean_std.txt`.
 
