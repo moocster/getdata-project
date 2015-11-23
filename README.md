@@ -55,3 +55,5 @@ Details of the data set can be found in `Codebook.md` found in this
 directory.
 
 ## What does run_analysis.R do?
+
+Please see the extensive inline documentation in run_analysis.R
